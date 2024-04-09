@@ -16,6 +16,8 @@ func main() {
 	retrieveMutableLogURL := "/retrieveMutableLog"
 	generateQcodeURL := "/getQrCode"
 
+	//os.Setenv("CA_route", "http://localhost:3000/api/v1/CA/")
+
 	http.HandleFunc(getURL, getHandler)
 	http.HandleFunc(createPassportURL, createPassportHandler)
 	http.HandleFunc(addRemanafactureEventURL, addMutableData)
@@ -25,7 +27,7 @@ func main() {
 	http.HandleFunc(generateQcodeURL, generateQrCode)
 
 	// Start the server on port 80
-	err := http.ListenAndServe(":80", nil)
+	err := http.ListenAndServe(":8000", nil)
 	if err != nil {
 		log.Println("There was an error listening on port :80", err)
 	}

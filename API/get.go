@@ -24,7 +24,8 @@ func readFile(sh *shell.Shell, cid string) (*string, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Error reading the file %s", err.Error())
 	}
-
+	//fmt.Println(bytes)
+	fmt.Println(string(bytes))
 	text := string(bytes)
 
 	// Pin the given CID to the local IPFS Node
@@ -120,7 +121,8 @@ func retrievePrivateKey(publicKey string) (success, message string) {
 	}
 	fmt.Println("Data till CA", string(jsonToCA))
 	// Retrieves the private key from the CA
-	address := "https://d0020e-project-dpp.vercel.app/api/v1/CA/" + publicKey
+	address := goDotEnvVariable("CA_route") + publicKey
+	//address := os.Getenv("CA_route") + publicKey
 	response := outboundCalls(jsonToCA, "GET", address)
 
 	var dataFromCa dataFromCa

@@ -8,6 +8,7 @@ import (
 	"io"
 	"math/rand"
 	"net/http"
+
 	"reflect"
 	"strings"
 	"time"
@@ -142,7 +143,7 @@ func createPassportHandler(writer http.ResponseWriter, request *http.Request) {
 	if passType == "complete" {
 		dataToCA.Cid = cid
 		postData, _ := json.Marshal(dataToCA)
-		outboundCalls(postData, "POST", "https://d0020e-project-dpp.vercel.app/api/v1/CA/")
+		outboundCalls(postData, "POST", goDotEnvVariable("CA_route"))
 	}
 
 	// Populates the Made_by key with the data contained in the Made_by field
@@ -175,7 +176,7 @@ func createPassportHandler(writer http.ResponseWriter, request *http.Request) {
 					makesData := make(map[string]interface{})
 					makesData["CID"] = m["CID"]
 					jsonData, _ := json.Marshal(makesData)
-					dataFromCall := outboundCalls(jsonData, "GET", "http://localhost:80/retrieveData")
+					dataFromCall := outboundCalls(jsonData, "GET", "http://localhost:8000/retrieveData")
 					var makesKey makesKey
 					json.Unmarshal([]byte(dataFromCall), &makesKey)
 					if reflect.TypeOf(makesKey) != nil {
@@ -188,7 +189,7 @@ func createPassportHandler(writer http.ResponseWriter, request *http.Request) {
 						jsonData, _ := json.Marshal(makesData)
 						// Updates the Make data for each of the made_by passes
 						if makesData["Key"] != "" {
-							response := outboundCalls(jsonData, "POST", "http://localhost:80/addMutableProduct")
+							response := outboundCalls(jsonData, "POST", "http://localhost:8000/addMutableProduct")
 							fmt.Println("RESPONS 180", response)
 						}
 					}
