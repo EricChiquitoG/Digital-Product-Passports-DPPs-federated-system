@@ -176,7 +176,7 @@ func createPassportHandler(writer http.ResponseWriter, request *http.Request) {
 					makesData := make(map[string]interface{})
 					makesData["CID"] = m["CID"]
 					jsonData, _ := json.Marshal(makesData)
-					dataFromCall := outboundCalls(jsonData, "GET", "http://localhost:8000/retrieveData")
+					dataFromCall := outboundCalls(jsonData, "GET", "http://localhost:80/retrieveData")
 					var makesKey makesKey
 					json.Unmarshal([]byte(dataFromCall), &makesKey)
 					if reflect.TypeOf(makesKey) != nil {
@@ -189,7 +189,7 @@ func createPassportHandler(writer http.ResponseWriter, request *http.Request) {
 						jsonData, _ := json.Marshal(makesData)
 						// Updates the Make data for each of the made_by passes
 						if makesData["Key"] != "" {
-							response := outboundCalls(jsonData, "POST", "http://localhost:8000/addMutableProduct")
+							response := outboundCalls(jsonData, "POST", "http://localhost:80/addMutableProduct")
 							fmt.Println("RESPONS 180", response)
 						}
 					}

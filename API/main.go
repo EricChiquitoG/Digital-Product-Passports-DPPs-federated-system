@@ -27,7 +27,7 @@ func main() {
 	http.HandleFunc(generateQcodeURL, generateQrCode)
 
 	// Start the server on port 80
-	err := http.ListenAndServe(":8000", nil)
+	err := http.ListenAndServe(":80", nil)
 	if err != nil {
 		log.Println("There was an error listening on port :80", err)
 	}
