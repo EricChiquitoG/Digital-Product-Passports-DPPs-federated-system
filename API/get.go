@@ -34,6 +34,15 @@ func readFile(sh *shell.Shell, cid string) (*string, error) {
 	return &text, nil
 }
 
+func jsonToMap(jsonStr string) interface{} {
+	var result interface{}
+	if err := json.Unmarshal([]byte(jsonStr), &result); err != nil {
+		fmt.Println("Error:", err)
+
+	}
+	return result
+}
+
 // Creates the shell needed for accessing the local Kubo node
 // Calls readFile and returns a map of the content
 func passportFromCID(cid string) (target map[string]interface{}) {
@@ -44,6 +53,13 @@ func passportFromCID(cid string) (target map[string]interface{}) {
 		return
 	}
 	err = json.Unmarshal([]byte(*text), &target)
+	if made_from, ok := target["made_from"].(string); ok {
+		target["made_from"] = jsonToMap(catRemanContent(made_from))
+
+	}
+	if makes, ok := target["makes"].(string); ok {
+		target["makes"] = jsonToMap(catRemanContent(makes))
+	}
 	return target
 }
 
