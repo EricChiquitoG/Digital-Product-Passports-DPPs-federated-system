@@ -30,7 +30,7 @@ func main() {
 	// Start the server on port 80
 	handler := cors.Default().Handler(mux)
 
-	err := http.ListenAndServe(":8000", handler)
+	err := http.ListenAndServe(":80", handler)
 	if err != nil {
 		log.Println("There was an error listening on port :80", err)
 	}
