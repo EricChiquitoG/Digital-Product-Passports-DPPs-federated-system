@@ -53,10 +53,14 @@ func passportFromCID(cid string) (target map[string]interface{}) {
 		return
 	}
 	err = json.Unmarshal([]byte(*text), &target)
-	if made_from, ok := target["made_from"].(string); ok {
-		target["made_from"] = jsonToMap(catRemanContent(made_from))
 
-	}
+	go func() {
+
+		if made_from, ok := target["made_from"].(string); ok {
+			target["made_from"] = jsonToMap(catRemanContent(made_from))
+
+		}
+	}()
 	if makes, ok := target["makes"].(string); ok {
 		target["makes"] = jsonToMap(catRemanContent(makes))
 	}
