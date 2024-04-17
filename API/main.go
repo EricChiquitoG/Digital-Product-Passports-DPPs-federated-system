@@ -1,12 +1,13 @@
 package main
 
 import (
+	"github.com/rs/cors"
 	"log"
 	"net/http"
 )
 
 func main() {
-
+	mux := http.NewServeMux()
 	// The endpoints in use check API doc for description of call structure
 	getURL := "/retrieveData"
 	createPassportURL := "/publishPassport"
@@ -27,7 +28,9 @@ func main() {
 	http.HandleFunc(generateQcodeURL, generateQrCode)
 
 	// Start the server on port 80
-	err := http.ListenAndServe(":80", nil)
+	handler := cors.Default().Handler(mux)
+
+	err := http.ListenAndServe(":8000", handler)
 	if err != nil {
 		log.Println("There was an error listening on port :80", err)
 	}
