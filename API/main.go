@@ -19,13 +19,13 @@ func main() {
 
 	//os.Setenv("CA_route", "http://localhost:3000/api/v1/CA/")
 
-	http.HandleFunc(getURL, getHandler)
-	http.HandleFunc(createPassportURL, createPassportHandler)
-	http.HandleFunc(addRemanafactureEventURL, addMutableData)
-	http.HandleFunc(retrieveEventURL, retriveEvent)
-	http.HandleFunc(addMutableProductURL, addMutableProduct)
-	http.HandleFunc(retrieveMutableLogURL, retrieveMutableLog)
-	http.HandleFunc(generateQcodeURL, generateQrCode)
+	mux.HandleFunc(getURL, getHandler)
+	mux.HandleFunc(createPassportURL, createPassportHandler)
+	mux.HandleFunc(addRemanafactureEventURL, addMutableData)
+	mux.HandleFunc(retrieveEventURL, retriveEvent)
+	mux.HandleFunc(addMutableProductURL, addMutableProduct)
+	mux.HandleFunc(retrieveMutableLogURL, retrieveMutableLog)
+	mux.HandleFunc(generateQcodeURL, generateQrCode)
 
 	// Start the server on port 80
 	handler := cors.Default().Handler(mux)
