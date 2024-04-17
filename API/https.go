@@ -20,7 +20,7 @@ import (
 // Function that handles the retrieval of passports from IPFS requires a CID
 func getHandler(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Content-Type", "application/json")
-	writter.Header().Set("Access-Control-Allow-Origin", "*")
+	writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	//Check that messages is GET
 	if request.Method != http.MethodGet {
@@ -63,7 +63,7 @@ func randSeq(n int) string {
 // If the call contains the field Made_by it uploads that to the responding key and updates the makes log in the responding passports.
 func createPassportHandler(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Content-Type", "application/json")
-	writter.Header().Set("Access-Control-Allow-Origin", "*")
+	writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	//Check that messages is Post
 	if request.Method != http.MethodPost {
@@ -244,7 +244,7 @@ func outboundCalls(body []byte, method string, address string) string {
 // Requires the responding key and the event data
 func addMutableData(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Content-Type", "application/json")
-	writter.Header().Set("Access-Control-Allow-Origin", "*")
+	writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	//Check that messages is Put
 	if request.Method != http.MethodPost {
@@ -358,7 +358,7 @@ func addMutableData(writer http.ResponseWriter, request *http.Request) {
 // Used for Remanufacturing or Shipping events
 func retriveEvent(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Content-Type", "application/json")
-	writter.Header().Set("Access-Control-Allow-Origin", "*")
+	writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	//Check that messages is Get
 	if request.Method != http.MethodGet {
@@ -429,7 +429,7 @@ func retriveEvent(writer http.ResponseWriter, request *http.Request) {
 // Adds a product to the made_by or makes logs for a passport
 func addMutableProduct(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Content-Type", "application/json")
-	writter.Header().Set("Access-Control-Allow-Origin", "*")
+	writer.Header().Set("Access-Control-Allow-Origin", "*")
 	//Check that messages is Put
 	if request.Method != http.MethodPost {
 		http.Error(writer, "Invalid request method", http.StatusMethodNotAllowed)
@@ -581,7 +581,7 @@ func addMutableProduct(writer http.ResponseWriter, request *http.Request) {
 // Retrieves the whole event log from a public key
 func retrieveMutableLog(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Content-Type", "application/json")
-	writter.Header().Set("Access-Control-Allow-Origin", "*")
+	writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	//Check that messages is Get
 	if request.Method != http.MethodGet {
@@ -614,7 +614,7 @@ func retrieveMutableLog(writer http.ResponseWriter, request *http.Request) {
 // Returns the filename = CID and a base 64 encoding of the QR code
 func generateQrCode(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Content-Type", "application/json")
-	writter.Header().Set("Access-Control-Allow-Origin", "*")
+	writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	//Check that messages is GET
 	if request.Method != http.MethodGet {
