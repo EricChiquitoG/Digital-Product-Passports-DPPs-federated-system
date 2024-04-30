@@ -98,11 +98,11 @@ func generateKey() (publicKey, privatekey string) {
 	keyRename(randomName, publicKey)
 
 	// Generates the filepath to the PrivateKeys folder
-	//filePath2 := filepath.Join("PrivateKeys", publicKey+".pem")
+	filePath2 := filepath.Join("PrivateKeys", publicKey+".pem")
 
 	// Exports the private key to a pem file, stores it in the PrivateKeys folder.
-	cmd := exec.Command("ipfs", "key", "export", publicKey, "--format=pem-pkcs8-cleartext")
-	//cmd := exec.Command("ipfs", "key", "export", publicKey, "--format=pem-pkcs8-cleartext", "-o", filePath2)
+	//cmd := exec.Command("ipfs", "key", "export", publicKey, "--format=pem-pkcs8-cleartext")
+	cmd := exec.Command("ipfs", "key", "export", publicKey, "--format=pem-pkcs8-cleartext", "-o", filePath2)
 	output, err := cmd.Output()
 	if err != nil {
 		fmt.Println("Error executing command:", err)
