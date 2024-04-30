@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	//	"sync"
 
 	shell "github.com/ipfs/go-ipfs-api"
 )
@@ -47,23 +48,26 @@ func jsonToMap(jsonStr string) interface{} {
 // Calls readFile and returns a map of the content
 func passportFromCID(cid string) (target map[string]interface{}) {
 	sh := shell.NewShell("localhost:5001")
+	//var wg sync.WaitGroup
 	text, err := readFile(sh, cid)
 	if err != nil {
 		fmt.Println("Error reading the file:", err.Error())
 		return
 	}
 	err = json.Unmarshal([]byte(*text), &target)
-
+	/* wg.Add(1)
 	go func() {
-
+		defer wg.Done()
 		if made_from, ok := target["made_from"].(string); ok {
-			target["made_from"] = jsonToMap(catRemanContent(made_from))
+			target["made_from_json"] = jsonToMap(catRemanContent(made_from))
 
 		}
 	}()
+	wg.Wait()
 	if makes, ok := target["makes"].(string); ok {
-		target["makes"] = jsonToMap(catRemanContent(makes))
+		target["makes_json"] = jsonToMap(catRemanContent(makes))
 	}
+	*/
 	return target
 }
 
@@ -94,11 +98,12 @@ func generateKey() (publicKey, privatekey string) {
 	keyRename(randomName, publicKey)
 
 	// Generates the filepath to the PrivateKeys folder
-	filePath2 := filepath.Join("PrivateKeys", publicKey+".pem")
+	//filePath2 := filepath.Join("PrivateKeys", publicKey+".pem")
 
 	// Exports the private key to a pem file, stores it in the PrivateKeys folder.
-	cmd := exec.Command("ipfs", "key", "export", publicKey, "--format=pem-pkcs8-cleartext", "-o", filePath2)
-	output, err := cmd.CombinedOutput()
+	cmd := exec.Command("ipfs", "key", "export", publicKey, "--format=pem-pkcs8-cleartext")
+	//cmd := exec.Command("ipfs", "key", "export", publicKey, "--format=pem-pkcs8-cleartext", "-o", filePath2)
+	output, err := cmd.Output()
 	if err != nil {
 		fmt.Println("Error executing command:", err)
 		fmt.Println("Command output:", string(output))
@@ -106,8 +111,8 @@ func generateKey() (publicKey, privatekey string) {
 	}
 
 	// Read the pem file in the PrivateKeys folder to get a string with its content.
-	data, err := os.ReadFile(filePath2)
-	privatekey = string(data)
+	//data, err := os.ReadFile(filePath2)
+	privatekey = string(output)
 	return publicKey, privatekey
 }
 

@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"strings"
+	"time"
 
 	shell "github.com/ipfs/go-ipfs-api"
 )
@@ -27,7 +29,9 @@ func splitListContent(Content string) ([]string, int) {
 
 // Retrieves the given IPNS public keys content.
 func catRemanContent(key string) string {
-	cmd := exec.Command("ipfs", "cat", ipnsKeyToCMD(key))
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(5)*time.Second)
+	defer cancel() // Ensure cancellation when exiting the function
+	cmd := exec.CommandContext(ctx, "ipfs", "cat", ipnsKeyToCMD(key))
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return ""
@@ -95,10 +99,9 @@ func keyRename(oldAlias, newAlias string) {
 }
 
 // Find out to what public key the CID is pointing to.
-func resolveKeyPointer(sh *shell.Shell, key string) (string, error) {
+func resolveKeyPointer(key string) (string, error) {
 	cmd := exec.Command("ipfs", "resolve", ipnsKeyToCMD(key))
 	output, err := cmd.CombinedOutput()
-
 	if err != nil {
 		return "", fmt.Errorf("failed to resolve public key %v, output: %s", err, output)
 	}
@@ -131,10 +134,11 @@ func addDataToIPNS(sh *shell.Shell, key string, cid string) (string, error) {
 		fmt.Println("ERROR: key is empty")
 		return "", nil
 	}
-	cmd := exec.Command("ipfs", "name", "publish", hashToCMD(key), cidToCMD(cid))
+	cmd := exec.Command("ipfs", "name", "publish", hashToCMD(key), cid)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return "", fmt.Errorf("failed to publish IPNS record: %v, output: %s", err, output)
 	}
+	fmt.Println("Test----------", string(output))
 	return string(output), nil
 }

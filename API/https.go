@@ -177,9 +177,10 @@ func createPassportHandler(writer http.ResponseWriter, request *http.Request) {
 			for _, item := range madeBy {
 				if m, ok := item.(map[string]interface{}); ok {
 					makesData := make(map[string]interface{})
+
 					makesData["CID"] = m["CID"]
 					jsonData, _ := json.Marshal(makesData)
-					dataFromCall := outboundCalls(jsonData, "GET", "http://localhost:80/retrieveData")
+					dataFromCall := outboundCalls(jsonData, "GET", "http://localhost:8000/retrieveData")
 					var makesKey makesKey
 					json.Unmarshal([]byte(dataFromCall), &makesKey)
 					if reflect.TypeOf(makesKey) != nil {
@@ -192,7 +193,9 @@ func createPassportHandler(writer http.ResponseWriter, request *http.Request) {
 						jsonData, _ := json.Marshal(makesData)
 						// Updates the Make data for each of the made_by passes
 						if makesData["Key"] != "" {
-							response := outboundCalls(jsonData, "POST", "http://localhost:80/addMutableProduct")
+							fmt.Println("is this printing?", makesData)
+
+							response := outboundCalls(jsonData, "POST", "http://localhost:8000/addMutableProduct")
 							fmt.Println("RESPONS 180", response)
 						}
 					}
@@ -463,7 +466,7 @@ func addMutableProduct(writer http.ResponseWriter, request *http.Request) {
 
 	json.Unmarshal(tmpByte, &record)
 	found := false
-
+	fmt.Println("Current file : - ", dataOnIPNS)
 	// Checks if the new product already exists in current log.
 	// If exists update current log by changing the product information to the new provided information.
 	// Else adds the new information as a new product last in the log
@@ -546,7 +549,7 @@ func addMutableProduct(writer http.ResponseWriter, request *http.Request) {
 		record2 = strings.Replace(record2, "]", "", -1)
 		record2 = strings.Replace(record2, "}{", "},{", -1)
 		record2 = "[" + record2 + "]"
-
+		fmt.Println("this is the new data being pushed ", record2)
 		sh := shell.NewShell("localhost:5001")
 		// Uploads new event log to IPFS
 		cid, err := addFile(sh, record2)
@@ -554,7 +557,9 @@ func addMutableProduct(writer http.ResponseWriter, request *http.Request) {
 		// If it does updates the IPNS record to point to new event log.
 		// Else retrieves the private key from the CA and then update IPNS
 		// If the project is run without a CA all keys need to be local
+		fmt.Println("nrekey   ", cid)
 		if checkKey(MutableData.Key) {
+			fmt.Println("foundkey1  :", MutableData.Key)
 			addDataToIPNS(sh, MutableData.Key, cid)
 			writer.WriteHeader(http.StatusOK)
 			statusText := "Data added"
@@ -562,6 +567,7 @@ func addMutableProduct(writer http.ResponseWriter, request *http.Request) {
 		} else {
 			success, message := retrievePrivateKey(MutableData.Key)
 			if success == "true" {
+				fmt.Println("foundkey2  :", MutableData.Key)
 				addDataToIPNS(sh, MutableData.Key, cid)
 				writer.WriteHeader(http.StatusOK)
 				statusText := "Data added"
@@ -602,7 +608,7 @@ func retrieveMutableLog(writer http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		fmt.Println("Put request failed", err)
 	}
-
+	fmt.Println(resolveKeyPointer(MutableLog.Key))
 	log := catRemanContent(MutableLog.Key)
 
 	writer.WriteHeader(http.StatusOK)
